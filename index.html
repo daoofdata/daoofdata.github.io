@@ -29,6 +29,12 @@
       color: #D13109;
       background-color: transparent;
       text-decoration: none;
+      border-bottom: 1px dashed transparent;
+      transition: color 0.15s ease, border-bottom-color 0.15s ease;
+    }
+
+    a:hover {
+      border-bottom-color: currentColor; /* or var(--ink) */
     }
 
     * {
@@ -374,11 +380,11 @@
     </section>
 
     <footer>
-      <!--<div class="footer-links">
-        <a href="#principles">principles</a>
+      <div class="footer-links">
+        <!--<a href="#principles">principles</a>-->
         <a href="https://github.com/daoofdata" target="_blank" rel="noopener">github</a>
-        <a href="mailto:hello@daoofdata.dev">hello@daoofdata.dev</a>
-      </div>-->
+        <!--<a href="mailto:hello@daoofdata.dev">hello@daoofdata.dev</a>-->
+      </div>
       <p>daoofdata.dev · the way of data</p>
     </footer>
   </main>
