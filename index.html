@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dao of Data — Data is as data does</title>
+  <meta name="description" content="Dao of Data. Data is as data does. The quiet discipline of pragmatic, natural data engineering.">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>☯</text></svg>">
+
+  <!-- Google Fonts: Chelsea Market & Inter / JetBrains Mono for clean developer typography -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Chelsea+Market&family=JetBrains+Mono:wght@400;500;600&family=Newsreader:ital,opsz,wght@0,6..72,400;0,6..72,500;1,6..72,400&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #fafafa;
+      --ink: #111111;
+      --ink-muted: #555555;
+      --ink-subtle: #888888;
+      --border: #e5e5e5;
+      --accent: #262626;
+      --font-chelsea: 'Chelsea Market', cursive, sans-serif;
+      --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+      --font-serif: 'Newsreader', Georgia, serif;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html, body {
+      min-height: 100%;
+      background-color: var(--bg);
+      color: var(--ink);
+      font-family: var(--font-mono);
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      line-height: 1.6;
+    }
+
+    /* Container matching ponytail.dev's minimalist centered layout */
+    .container {
+      width: 100%;
+      max-width: 680px;
+      margin: 0 auto;
+      padding: 5rem 1.5rem 6rem;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+    }
+
+    .hero {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      text-align: center;
+      margin-bottom: 3.5rem;
+    }
+
+    .logo-frame {
+      width: 100%;
+      max-width: 460px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-bottom: 2rem;
+      transition: transform 0.3s ease;
+    }
+
+    .logo-frame:hover {
+      transform: scale(1.015);
+    }
+
+    .logo-img {
+      width: 100%;
+      max-width: 460px;
+      height: auto;
+      display: block;
+      object-fit: contain;
+      /* Seamlessly blend white background of the PNG onto the #fafafa canvas */
+      mix-blend-mode: multiply;
+    }
+
+    /* Primary tagline formatted in Chelsea Market */
+    .tagline {
+      font-family: var(--font-chelsea);
+      font-size: 2.15rem;
+      color: var(--ink);
+      letter-spacing: -0.01em;
+      line-height: 1.25;
+      margin-bottom: 1rem;
+      text-wrap: balance;
+    }
+
+    .sub-tagline {
+      font-family: var(--font-serif);
+      font-style: italic;
+      font-size: 1.15rem;
+      color: var(--ink-muted);
+      max-width: 520px;
+      line-height: 1.6;
+    }
+
+    .divider {
+      width: 48px;
+      height: 1px;
+      background: var(--ink-subtle);
+      opacity: 0.35;
+      margin: 2.5rem 0;
+    }
+
+    .content-block {
+      width: 100%;
+      display: flex;
+      flex-direction: column;
+      gap: 2.5rem;
+    }
+
+    .manifesto-intro {
+      font-size: 0.95rem;
+      color: var(--ink-muted);
+      border-left: 2px solid var(--ink);
+      padding-left: 1.25rem;
+      line-height: 1.7;
+    }
+
+    .ladder-title {
+      font-size: 0.82rem;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+      color: var(--ink-subtle);
+      margin-bottom: 0.75rem;
+      font-weight: 600;
+    }
+
+    .principles-ladder {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+    }
+
+    .rung {
+      display: flex;
+      align-items: baseline;
+      gap: 1rem;
+      padding: 0.85rem 1rem;
+      background: rgba(0, 0, 0, 0.02);
+      border: 1px solid rgba(0, 0, 0, 0.05);
+      border-radius: 8px;
+      transition: background 0.2s ease, border-color 0.2s ease;
+      font-size: 0.9rem;
+    }
+
+    .rung:hover {
+      background: rgba(0, 0, 0, 0.04);
+      border-color: rgba(0, 0, 0, 0.12);
+    }
+
+    .rung-num {
+      color: var(--ink-subtle);
+      font-size: 0.78rem;
+      font-weight: 600;
+      flex-shrink: 0;
+      width: 1.6rem;
+    }
+
+    .rung-text strong {
+      color: var(--ink);
+      font-weight: 600;
+    }
+
+    .rung-text span {
+      color: var(--ink-muted);
+      font-size: 0.86rem;
+      display: block;
+      margin-top: 0.15rem;
+    }
+
+    .terminal-box {
+      margin-top: 1rem;
+      background: #ffffff;
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 1.15rem 1.25rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.03);
+    }
+
+    .terminal-code {
+      font-family: var(--font-mono);
+      font-size: 0.85rem;
+      color: var(--ink);
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+
+    .terminal-prompt {
+      color: var(--ink-subtle);
+      user-select: none;
+      margin-right: 0.35rem;
+    }
+
+    .copy-btn {
+      background: #f0f0f0;
+      color: var(--ink);
+      border: 1px solid #e0e0e0;
+      padding: 0.4rem 0.75rem;
+      border-radius: 6px;
+      font-family: var(--font-mono);
+      font-size: 0.78rem;
+      cursor: pointer;
+      flex-shrink: 0;
+      transition: all 0.2s ease;
+    }
+
+    .copy-btn:hover {
+      background: #e5e5e5;
+      border-color: #ccc;
+    }
+
+    footer {
+      margin-top: 5rem;
+      text-align: center;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 0.75rem;
+      font-size: 0.82rem;
+      color: var(--ink-subtle);
+    }
+
+    .footer-links {
+      display: flex;
+      gap: 1.5rem;
+      list-style: none;
+    }
+
+    .footer-links a {
+      color: var(--ink-muted);
+      text-decoration: none;
+      transition: color 0.15s ease;
+      border-bottom: 1px dashed transparent;
+    }
+
+    .footer-links a:hover {
+      color: var(--ink);
+      border-bottom-color: var(--ink);
+    }
+
+    /* Responsive adjustments */
+    @media (max-width: 640px) {
+      .container {
+        padding: 3.5rem 1.25rem 4rem;
+      }
+      .tagline {
+        font-size: 1.8rem;
+      }
+      .rung {
+        flex-direction: column;
+        gap: 0.25rem;
+      }
+      .terminal-box {
+        flex-direction: column;
+        align-items: flex-start;
+      }
+      .copy-btn {
+        align-self: flex-end;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <main class="container">
+    <section class="hero">
+      <div class="logo-frame">
+        <img 
+          src="logo-dao-of-data.png" 
+          alt="Dao of Data" 
+          class="logo-img"
+          id="daoLogo"
+        />
+      </div>
+
+      <!-- Tagline styled with Google Font Chelsea Market -->
+      <h1 class="tagline">Data is as data does</h1>
+      
+      <p class="sub-tagline">
+        The simplest pipeline that preserves the truth is the only one you need to maintain.
+      </p>
+    </section>
+
+    <div class="divider" aria-hidden="true"></div>
+
+    <section class="content-block">
+      <div class="manifesto-intro">
+        // The Dao of Data is not found in sprawling orchestrators, 
+        premature data lakes, or eighty-layer transformations. 
+        It is the quiet art of letting data flow without resistance.
+      </div>
+
+      <div>
+        <div class="ladder-title">The Five Rungs of Flow</div>
+        <ol class="principles-ladder">
+          <li class="rung">
+            <span class="rung-num">01</span>
+            <div class="rung-text">
+              <strong>Does it need to be transformed?</strong>
+              <span>If standard serialization or native formats suffice, leave it whole.</span>
+            </div>
+          </li>
+          <li class="rung">
+            <span class="rung-num">02</span>
+            <div class="rung-text">
+              <strong>Query at the natural source</strong>
+              <span>Don't clone state you don't own. Filter where the bytes reside.</span>
+            </div>
+          </li>
+          <li class="rung">
+            <span class="rung-num">03</span>
+            <div class="rung-text">
+              <strong>Prefer plain primitives over heavyweight tools</strong>
+              <span>Standard SQL, streaming pipes, and clean schemas outlive frameworks.</span>
+            </div>
+          </li>
+          <li class="rung">
+            <span class="rung-num">04</span>
+            <div class="rung-text">
+              <strong>Idempotent & observable</strong>
+              <span>A pure transform run twice produces the same stillness.</span>
+            </div>
+          </li>
+          <li class="rung">
+            <span class="rung-num">05</span>
+            <div class="rung-text">
+              <strong>Only then: write new code</strong>
+              <span>The minimum code that works. No speculative abstractions.</span>
+            </div>
+          </li>
+        </ol>
+      </div>
+
+      <div>
+        <div class="ladder-title">Connect</div>
+        <div class="terminal-box">
+          <div class="terminal-code">
+            <span class="terminal-prompt">❯</span>curl -s https://daoofdata.dev/manifesto.txt
+          </div>
+          <button class="copy-btn" id="copyBtn" onclick="copyCommand()">copy</button>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="footer-links">
+        <a href="#principles">principles</a>
+        <a href="https://github.com" target="_blank" rel="noopener">github</a>
+        <a href="mailto:hello@daoofdata.dev">hello@daoofdata.dev</a>
+      </div>
+      <p>daoofdata.dev · effortless clarity</p>
+    </footer>
+  </main>
+
+  <script>
+    // Copy command helper adhering to iframe copy restrictions
+    function copyCommand() {
+      const textToCopy = 'curl -s https://daoofdata.dev/manifesto.txt';
+      const btn = document.getElementById('copyBtn');
+
+      const tempInput = document.createElement('input');
+      tempInput.value = textToCopy;
+      document.body.appendChild(tempInput);
+      tempInput.select();
+      
+      try {
+        const success = document.execCommand('copy');
+        if (success) {
+          btn.textContent = 'copied!';
+          btn.style.background = '#e6f4ea';
+          btn.style.color = '#137333';
+          setTimeout(() => {
+            btn.textContent = 'copy';
+            btn.style.background = '';
+            btn.style.color = '';
+          }, 2000);
+        }
+      } catch (err) {
+        console.error('Fallback copy error:', err);
+      } finally {
+        document.body.removeChild(tempInput);
+      }
+    }
+  </script>
+</body>
+</html>
